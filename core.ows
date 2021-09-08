@@ -3,15 +3,45 @@
 	<nodes>
 		<node id="0" name="CSV File Import" qualified_name="Orange.widgets.data.owcsvimport.OWCSVFileImport" project_name="Orange3" version="" title="merged dataset(exclude test-instance)" position="(150, 150)" />
 		<node id="1" name="Data Table" qualified_name="Orange.widgets.data.owtable.OWDataTable" project_name="Orange3" version="" title="Data Table" position="(349.0, 66.0)" />
+		<node id="2" name="Feature Statistics" qualified_name="Orange.widgets.data.owfeaturestatistics.OWFeatureStatistics" project_name="Orange3" version="" title="Feature Statistics" position="(426.0, 168.0)" />
+		<node id="3" name="Distributions" qualified_name="Orange.widgets.visualize.owdistributions.OWDistributions" project_name="Orange3" version="" title="Distributions" position="(161.0, 316.0)" />
 	</nodes>
 	<links>
 		<link id="0" source_node_id="0" sink_node_id="1" source_channel="Data" sink_channel="Data" enabled="true" />
+		<link id="1" source_node_id="0" sink_node_id="2" source_channel="Data" sink_channel="Data" enabled="true" />
+		<link id="2" source_node_id="0" sink_node_id="3" source_channel="Data" sink_channel="Data" enabled="true" />
 	</links>
 	<annotations />
 	<thumbnail />
 	<node_properties>
 		<properties node_id="0" format="literal">{'_session_items': [('C:/Users/11973/Desktop/309Ass/COMP309a3/datasets/merged_all.csv', {'encoding': 'utf-8', 'delimiter': ',', 'quotechar': '"', 'doublequote': True, 'skipinitialspace': True, 'quoting': 0, 'columntypes': [{'start': 0, 'stop': 19, 'value': 'Auto'}], 'rowspec': [{'start': 0, 'stop': 1, 'value': 'Header'}], 'decimal_separator': '.', 'group_separator': ''}), ('C:/Users/11973/Desktop/COMP309a2/Part1/merged_17_18_19.csv', {'encoding': 'utf-8', 'delimiter': ',', 'quotechar': '"', 'doublequote': True, 'skipinitialspace': True, 'quoting': 0, 'columntypes': [{'start': 0, 'stop': 26, 'value': 'Auto'}], 'rowspec': [{'start': 0, 'stop': 1, 'value': 'Header'}], 'decimal_separator': '.', 'group_separator': ''})], 'controlAreaVisible': True, 'dialog_state': {'directory': 'C:/Users/11973/Desktop/309Ass/COMP309a3/datasets', 'filter': 'Text - comma separated (*.csv, *)'}, 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x02\x00\x00\x00\x00\x01P\x00\x00\x00Z\x00\x00\x02o\x00\x00\x01\x92\x00\x00\x01U\x00\x00\x00p\x00\x00\x02j\x00\x00\x01\x8d\x00\x00\x00\x00\x00\x00\x00\x00\x03\xc0', '__version__': 1}</properties>
 		<properties node_id="1" format="literal">{'auto_commit': True, 'color_by_class': True, 'controlAreaVisible': True, 'dist_color_RGB': (220, 220, 220, 255), 'savedWidgetGeometry': b'\x01\xd9\xd0\xcb\x00\x03\x00\x00\x00\x00\x00\x08\x00\x00\x00P\x00\x00\x04\x17\x00\x00\x03L\x00\x00\x00\x08\x00\x00\x00l\x00\x00\x04\x17\x00\x00\x03L\x00\x00\x00\x00\x00\x00\x00\x00\x05\xa0\x00\x00\x00\x08\x00\x00\x00l\x00\x00\x04\x17\x00\x00\x03L', 'select_rows': True, 'selected_cols': [], 'selected_rows': [], 'show_attribute_labels': True, 'show_distributions': False, '__version__': 1}</properties>
+		<properties node_id="2" format="pickle">gASVOwIAAAAAAAB9lCiMC2F1dG9fY29tbWl0lIiMEmNvbnRyb2xBcmVhVmlzaWJsZZSIjBNzYXZl
+ZFdpZGdldEdlb21ldHJ5lEMyAdnQywACAAAAAACbAAAANQAAAyQAAAG3AAAAoAAAAEsAAAMfAAAB
+sgAAAAAAAAAAA8CUjAdzb3J0aW5nlEsASwGGlIwLX192ZXJzaW9uX1+USwKMEGNvbnRleHRfc2V0
+dGluZ3OUXZSMFW9yYW5nZXdpZGdldC5zZXR0aW5nc5SMB0NvbnRleHSUk5QpgZR9lCiMBnZhbHVl
+c5R9lCiMCWNvbG9yX3ZhcpSMC2luc3RhbmNlX2lklEtmhpSMDXNlbGVjdGVkX3ZhcnOUXZRoB0sC
+dYwKYXR0cmlidXRlc5R9lChoEksCjApwb3B1bGFyaXR5lEsCjAxhY291c3RpY25lc3OUSwKMDGRh
+bmNlYWJpbGl0eZRLAowLZHVyYXRpb25fbXOUSwKMBmVuZXJneZRLAowQaW5zdHJ1bWVudGFsbmVz
+c5RLAowDa2V5lEsBjAhsaXZlbmVzc5RLAowIbG91ZG5lc3OUSwKMBG1vZGWUSwGMC3NwZWVjaGlu
+ZXNzlEsCjAV0ZW1wb5RLAowNb2J0YWluZWRfZGF0ZZRLAYwHdmFsZW5jZZRLAowLbXVzaWNfZ2Vu
+cmWUSwF1jAVtZXRhc5R9lCiMC2FydGlzdF9uYW1llEsDjAp0cmFja19oYXNolEsDjAp0cmFja19u
+YW1llEsDdXViYXUu
+</properties>
+		<properties node_id="3" format="pickle">gASVvAIAAAAAAAB9lCiMCmF1dG9fYXBwbHmUiIwSY29udHJvbEFyZWFWaXNpYmxllIiMEGN1bXVs
+YXRpdmVfZGlzdHKUiYwTZml0dGVkX2Rpc3RyaWJ1dGlvbpRLAIwJaGlkZV9iYXJzlImMDWtkZV9z
+bW9vdGhpbmeUSwqME3NhdmVkV2lkZ2V0R2VvbWV0cnmUQzIB2dDLAAIAAAAAAJsAAAA1AAADJAAA
+AbcAAACgAAAASwAAAx8AAAGyAAAAAAAAAAADwJSMCnNob3dfcHJvYnOUiYwPc3RhY2tlZF9jb2x1
+bW5zlImMC19fdmVyc2lvbl9flEsBjBBjb250ZXh0X3NldHRpbmdzlF2UjBVvcmFuZ2V3aWRnZXQu
+c2V0dGluZ3OUjAdDb250ZXh0lJOUKYGUfZQojAZ2YWx1ZXOUfZQojARjdmFylE5K/v///4aUjA5u
+dW1iZXJfb2ZfYmluc5RLBUr+////hpSMCXNlbGVjdGlvbpSPlEr+////hpSMA3ZhcpSMC2luc3Rh
+bmNlX2lklEtmhpRoC0sBdYwKYXR0cmlidXRlc5R9lChoHUsCjApwb3B1bGFyaXR5lEsCjAxhY291
+c3RpY25lc3OUSwKMDGRhbmNlYWJpbGl0eZRLAowLZHVyYXRpb25fbXOUSwKMBmVuZXJneZRLAowQ
+aW5zdHJ1bWVudGFsbmVzc5RLAowDa2V5lEsBjAhsaXZlbmVzc5RLAowIbG91ZG5lc3OUSwKMBG1v
+ZGWUSwGMC3NwZWVjaGluZXNzlEsCjAV0ZW1wb5RLAowNb2J0YWluZWRfZGF0ZZRLAYwHdmFsZW5j
+ZZRLAowLbXVzaWNfZ2VucmWUSwF1jAVtZXRhc5R9lCiMC2FydGlzdF9uYW1llEsDjAp0cmFja19o
+YXNolEsDjAp0cmFja19uYW1llEsDdXViYXUu
+</properties>
 	</node_properties>
 	<session_state>
 		<window_groups />
