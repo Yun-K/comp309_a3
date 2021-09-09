@@ -18,7 +18,36 @@ Due to there are lots of datasets in there, so the first thing that I do is to m
 		+ The same as previous ‘duration_ms’ one, I choose to use global mean to fill the NA
 + For the rest of features, there are no potential missing values, but there are still several remarkable tgi
 + 'track_hash', 'track_name', 'popularity', 'acousticness', 'danceability', 'energy', 'instrumentalness', =='key'==,'liveness', 'loudness',  =='mode'==, ,'speechiness', 'obtained_date', 'valence', 'music_genre'
-+ 
+
+<div align="center">
+<img align="left" width="50%" src="report_a3.assets/pearson.png" alt="pearson" /> 
+<img align="right" width="50%" src="report_a3.assets/phik.png" alt="phik" /> 
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -71,5 +100,8 @@ You should consider the interpretability of your final chosen model in this part
 1. https://towardsdatascience.com/is-my-spotify-music-boring-an-analysis-involving-music-data-and-machine-learning-47550ae931de
 2. https://rpubs.com/PeterDola/SpotifyTracks
 3. https://stackoverflow.com/questions/13413590/how-to-drop-rows-of-pandas-dataframe-whose-value-in-a-certain-column-is-nan
-  + It contains everything about different ways of delete NA
+
+	​	+ It contains everything about different ways of delete NA
+
 4. 
+

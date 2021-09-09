@@ -53,27 +53,32 @@ def replace_by_mean(whole_noMissing):
     return whole_noMissing
 
 
-def encode_class_label(whole_noMissing):
-    # le = LabelEncoder()
-    # lab = le.fit_transform(whole_noMissing.music_genre)
-    # class_lab = pd.DataFrame(lab, columns = ["music_genre"])
-    # whole_noMissing['music_genre'] = class_lab.values
+# def encode_class_label(whole_noMissing):
+#     # le = LabelEncoder()
+#     # lab = le.fit_transform(whole_noMissing.music_genre)
+#     # class_lab = pd.DataFrame(lab, columns = ["music_genre"])
+#     # whole_noMissing['music_genre'] = class_lab.values
+#     lbe = LabelEncoder()
+#     whole_noMissing['music_genre'] = lbe.fit_transform(
+#         whole_noMissing['music_genre'])
+#     return whole_noMissing
+
+
+# def encode_feature_mode(whole_noMissing):
+#     '''mode has only major and minor, so use label encoder is fine'''
+#     # le = LabelEncoder()
+#     # lab = le.fit_transform(whole_noMissing.music_genre)
+#     # class_lab = pd.DataFrame(lab, columns = ["mode"])
+#     # whole_noMissing['mode'] = class_lab.values
+#     lbe = LabelEncoder()
+#     whole_noMissing['mode'] = lbe.fit_transform(whole_noMissing['mode'])
+#     return whole_noMissing
+
+def label_encoder(dataset,feature_list=['mode', 'music_genre']  ):
     lbe = LabelEncoder()
-    whole_noMissing['music_genre'] = lbe.fit_transform(
-        whole_noMissing['music_genre'])
-    return whole_noMissing
-
-
-def encode_feature_mode(whole_noMissing):
-    '''mode has only major and minor, so use label encoder is fine'''
-    # le = LabelEncoder()
-    # lab = le.fit_transform(whole_noMissing.music_genre)
-    # class_lab = pd.DataFrame(lab, columns = ["mode"])
-    # whole_noMissing['mode'] = class_lab.values
-    lbe = LabelEncoder()
-    whole_noMissing['mode'] = lbe.fit_transform(whole_noMissing['mode'])
-
-    return whole_noMissing
+    for feature in feature_list:
+        dataset[feature] = lbe.fit_transform(dataset[feature])
+    return dataset
 
 
 def ordinal_encoder(dataset,feature_list=['key', 'obtained_date']  ):
@@ -82,9 +87,9 @@ def ordinal_encoder(dataset,feature_list=['key', 'obtained_date']  ):
     # feature_list = ['key', 'obtained_date']  # ,'mode']
 
     encoder = OrdinalEncoder()
-    for i in range(len(dataset)):
-        dataset[feature_list[i]] = encoder.fit_transform(
-            dataset[feature_list[i]].to_numpy().reshape(-1, 1))
+    for feature in feature_list:
+        dataset[feature] = encoder.fit_transform(dataset[feature].values.reshape(-1,1))
+
 
     return dataset
 
@@ -107,7 +112,7 @@ def ordinal_encoder(dataset,feature_list=['key', 'obtained_date']  ):
     # ordinal_encoded = encoder.fit_transform(dataset.mode.values.reshape(-1, 1))
     # mode_fea = pd.DataFrame(ordinal_encoded, columns = ["mode"])
     # dataset['mode'] = mode_fea.values
-    return dataset
+    # return dataset
 
 
 # TODO: https://stackoverflow.com/questions/57507832/unable-to-allocate-array-with-shape-and-data-type
@@ -116,7 +121,7 @@ def one_hot_encoder(dataset, feature_list=['artist_name', 'track_hash', 'track_n
     # feature_list = ['artist_name', 'track_hash', 'track_name']
 
     encoder = OneHotEncoder(handle_unknown='ignore', sparse=False)
-    for i in range(len(feature_list)):
+    for i in range(len(feature_list)-1):
         dataset[feature_list[i]] = encoder.fit_transform(
             dataset[feature_list[i]].to_numpy().reshape(-1, 1))
 
@@ -142,3 +147,14 @@ def one_hot_encoder(dataset, feature_list=['artist_name', 'track_hash', 'track_n
     # hot_encoded = encoder.fit_transform(dataset.track_name.values().reshape(-1,1))
     # track_name = pd.DataFrame(hot_encoded, columns = ["track_name"])
     # dataset['track_name'] = track_name.values
+
+
+
+def plot_heatmap(cor, name):
+    """plot_heatmap by the cor parameter
+    Args:
+        cor ([type]): corelation value that you want to use to plot
+    """
+    fig = plt.figure(figsize=(15, 9))
+    sns.heatmap(cor,  cmap='Blues', annot=True)
+    fig.suptitle("Heatmap of "+ name)
