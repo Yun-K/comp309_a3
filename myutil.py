@@ -18,21 +18,35 @@ import pydotplus
 import seaborn as sns  # visualising
 import sklearn
 from IPython.display import Image
+from matplotlib.colors import ListedColormap
 from numpy import cov
 from scipy.stats import pearsonr
-from sklearn import datasets, tree
-from sklearn.ensemble import AdaBoostClassifier, RandomForestClassifier
+from sklearn import datasets, metrics, preprocessing, tree
+from sklearn.cluster import KMeans
+# import sklearn
+from sklearn.datasets import (make_blobs, make_circles,  # , load_iris
+                              make_classification, make_hastie_10_2,
+                              make_moons)
+from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
+from sklearn.ensemble import (AdaBoostClassifier, GradientBoostingClassifier,
+                              RandomForestClassifier)
 from sklearn.feature_selection import SelectKBest, chi2
-from sklearn.linear_model import LinearRegression
-from sklearn.model_selection import train_test_split
+from sklearn.gaussian_process import GaussianProcessClassifier
+from sklearn.gaussian_process.kernels import RBF
+from sklearn.linear_model import LinearRegression, LogisticRegression
+from sklearn.metrics import make_scorer, recall_score
+from sklearn.model_selection import (ShuffleSplit, cross_val_score,
+                                     cross_validate, train_test_split)
+from sklearn.naive_bayes import GaussianNB
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.neural_network import MLPClassifier
 from sklearn.pipeline import make_pipeline
 # Encoding categorical features with preserving the missing values in incomplete features
 from sklearn.preprocessing import (KBinsDiscretizer, LabelEncoder,
                                    OneHotEncoder, OrdinalEncoder,
                                    StandardScaler)
-from sklearn.svm import SVR
+from sklearn.svm import SVC, SVR, LinearSVC
 from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor
-
 
 # label_encoder = LabelEncoder()
 # ordinal_encoder = OrdinalEncoder()

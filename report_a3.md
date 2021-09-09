@@ -9,14 +9,14 @@ Due to there are lots of datasets in there, so the first thing that I do is to m
 + 'instance_id' is unique, which means the percentage of distinct is 100%
 	+ For avoiding the over-fit issue during training, I decide to delete this column at start, since it is absolutely unnecessary feature. 
 + For features that has potential missing value:<img align="right" width="20%" src="report_a3.assets/image-20210908224436081.png" alt="image-20210908224436081" style="zoom:33%;" /> (on the right screenshot)
-	+ =='artist_name'== is the category variable which has empty_field as the individual category to capture the missing values.  ~~so leave it alone missing value~~ 	
+	+ =='artist_name'== is the category variable which has empty_field as the individual category to capture the missing values.  ~~so leave  it alone since it capture missing value~~ 	
 	  + Through the observation, it is uniform distributed across all datasets(~ 5% missing for each), which cause the total missing percentage is less than 5% as well. Therefore, I think it is MCAR, which means rows can be deleted where artist_name is missing, which is the operation that I do on this feature.
 	+ Undoubtedly, =='duration_ms'== is a numerical feature that values should always be positive. However, there are about 10% rows that has -1 as its value, which indicates they are missing. 
 		+ The distribution of missing also is the same as previous, which means it is MCAR as well. However, from slide14, I obtain that Deletion approach should only be applied when it is MCAR and missing percentage is less than 5%. 
 		+ So, I choose to use the Imputation approach, which try to use the global mean value to fill the NA.
 	+ From [[1]](https://rpubs.com/PeterDola/SpotifyTracks) and [[2]](https://towardsdatascience.com/is-my-spotify-music-boring-an-analysis-involving-music-data-and-machine-learning-47550ae931de), I know that ==‘tempo’== should be the numerical feature, but due to it has ‘?’ represents the missing value, so python recognize it as the categorical feature. It is also the MCAR which is the same reason as previous. There are also about 10% missing.
 		+ The same as previous ‘duration_ms’ one, I choose to use global mean to fill the NA
-+ For the rest of features, there are no potential missing values, but there are still several remarkable tgi
++ For the rest of features, there are no potential missing values., which are back but there are still several remarkable tgi
 + 'track_hash', 'track_name', 'popularity', 'acousticness', 'danceability', 'energy', 'instrumentalness', =='key'==,'liveness', 'loudness',  =='mode'==, ,'speechiness', 'obtained_date', 'valence', 'music_genre'
 
 <div align="center">
@@ -24,9 +24,11 @@ Due to there are lots of datasets in there, so the first thing that I do is to m
 <img align="right" width="50%" src="report_a3.assets/phik.png" alt="phik" /> 
 </div>
 
+<img src="report_a3.assets/image-20210910022709403.png" alt="image-20210910022709403" style="zoom:67%;" /><img src="report_a3.assets/image-20210910022722203.png" alt="image-20210910022722203" style="zoom:50%;" />
 
 
 
+<img src="report_a3.assets/image-20210910022750025.png" alt="image-20210910022750025" style="zoom:50%;" />
 
 
 
@@ -104,4 +106,9 @@ You should consider the interpretability of your final chosen model in this part
 	​	+ It contains everything about different ways of delete NA
 
 4. 
+
+Completion:
+
+5. https://scikit-learn.org/stable/modules/cross_validation.html
+6. 
 
