@@ -69,6 +69,12 @@ My initial design
 
 
 
+Within use track_hash:
+
+<img src="report_a3.assets/image-20210910023941129.png" alt="Within use track_hash" style="zoom:50%;" />
+
+
+
 ##### (25 marks) Discuss the design of one or more of your intermediary systems. Justify the changes you made to the previous design based on its performance on the leaderboard, and from any other additional investigation you performed.
 
 

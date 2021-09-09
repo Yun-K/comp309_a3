@@ -18,8 +18,9 @@ import pydotplus
 import seaborn as sns  # visualising
 import sklearn
 from IPython.display import Image
+from matplotlib import pyplot
 from matplotlib.colors import ListedColormap
-from numpy import cov
+from numpy import asarray, cov, isnan, mean, polyfit
 from scipy.stats import pearsonr
 from sklearn import datasets, metrics, preprocessing, tree
 from sklearn.cluster import KMeans
@@ -27,16 +28,21 @@ from sklearn.cluster import KMeans
 from sklearn.datasets import (make_blobs, make_circles,  # , load_iris
                               make_classification, make_hastie_10_2,
                               make_moons)
-from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
-from sklearn.ensemble import (AdaBoostClassifier, GradientBoostingClassifier,
+from sklearn.discriminant_analysis import (LinearDiscriminantAnalysis,
+                                           QuadraticDiscriminantAnalysis)
+from sklearn.ensemble import (AdaBoostClassifier, BaggingClassifier,
+                              ExtraTreesClassifier, GradientBoostingClassifier,
                               RandomForestClassifier)
 from sklearn.feature_selection import SelectKBest, chi2
 from sklearn.gaussian_process import GaussianProcessClassifier
 from sklearn.gaussian_process.kernels import RBF
-from sklearn.linear_model import LinearRegression, LogisticRegression
+from sklearn.linear_model import (LinearRegression, LogisticRegression,
+                                  PassiveAggressiveClassifier, RidgeClassifier,
+                                  SGDClassifier)
 from sklearn.metrics import make_scorer, recall_score
-from sklearn.model_selection import (ShuffleSplit, cross_val_score,
-                                     cross_validate, train_test_split)
+from sklearn.model_selection import (KFold, LeaveOneOut, ShuffleSplit,
+                                     cross_val_score, cross_validate,
+                                     train_test_split)
 from sklearn.naive_bayes import GaussianNB
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.neural_network import MLPClassifier
@@ -46,7 +52,10 @@ from sklearn.preprocessing import (KBinsDiscretizer, LabelEncoder,
                                    OneHotEncoder, OrdinalEncoder,
                                    StandardScaler)
 from sklearn.svm import SVC, SVR, LinearSVC
-from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor
+from sklearn.tree import (DecisionTreeClassifier, DecisionTreeRegressor,
+                          ExtraTreeClassifier)
+
+import myutil  # myutil
 
 # label_encoder = LabelEncoder()
 # ordinal_encoder = OrdinalEncoder()
@@ -115,7 +124,29 @@ def plot_heatmap(cor, name):
     fig.suptitle("Heatmap of "+ name)
 
 
-
+# get a list of models to evaluate
+def get_models():
+    '''get a list of models to evaluate'''
+    models = list()
+    models.append(LogisticRegression())
+    models.append(RidgeClassifier())
+    models.append(SGDClassifier())
+    models.append(PassiveAggressiveClassifier())
+    models.append(KNeighborsClassifier())
+    models.append(DecisionTreeClassifier())
+    models.append(ExtraTreeClassifier())
+    models.append(LinearSVC())
+    models.append(SVC())
+    models.append(GaussianNB())
+    models.append(AdaBoostClassifier())
+    models.append(BaggingClassifier())
+    models.append(RandomForestClassifier())
+    models.append(ExtraTreesClassifier())
+    models.append(GaussianProcessClassifier())
+    models.append(GradientBoostingClassifier())
+    models.append(LinearDiscriminantAnalysis())
+    models.append(QuadraticDiscriminantAnalysis())
+    return models
 
 
 # def encode_class_label(whole_noMissing):
