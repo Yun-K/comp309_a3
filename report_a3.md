@@ -16,8 +16,14 @@ Due to there are lots of datasets in there, so the first thing that I do is to m
 		+ So, I choose to use the Imputation approach, which try to use the global mean value to fill the NA.
 	+ From [[1]](https://rpubs.com/PeterDola/SpotifyTracks) and [[2]](https://towardsdatascience.com/is-my-spotify-music-boring-an-analysis-involving-music-data-and-machine-learning-47550ae931de), I know that ==‘tempo’== should be the numerical feature, but due to it has ‘?’ represents the missing value, so python recognize it as the categorical feature. It is also the MCAR which is the same reason as previous. There are also about 10% missing.
 		+ The same as previous ‘duration_ms’ one, I choose to use global mean to fill the NA
-+ For the rest of features, there are no potential missing values., which are back but there are still several remarkable tgi
-+ 'track_hash', 'track_name', 'popularity', 'acousticness', 'danceability', 'energy', 'instrumentalness', =='key'==,'liveness', 'loudness',  =='mode'==, ,'speechiness', 'obtained_date', 'valence', 'music_genre'
+
+After dealing with these missing values, I start to encode the categorical variables. For encoders, I use Label encoder and ordinal encoder where label encoder to encode the ‘music_genre’ and ‘mode’. Since ‘mode’ has only 2 categories(i.e. Major and Minor), so I think it is fine to use the label encoder. For ordinal encoder, it is used to encode  remaining categorical variables. 
+
+Actually, through the knowledge from [[4]](https://zhuanlan.zhihu.com/p/117230627), this ordinal encoder is better to suit the values has order. For instance, the categorial variable ‘obtained_date’ has the obvious order and from [[1]](https://rpubs.com/PeterDola/SpotifyTracks) and [[2]](https://towardsdatascience.com/is-my-spotify-music-boring-an-analysis-involving-music-data-and-machine-learning-47550ae931de), we can know ‘key’ also has the potential logic order, so these 2 are the best suit for ordinal encoder. 
+
+However, for remaining, I also use ordinal encoder as well, which is not the best choice that could cause under-fit. I also try to use ==OHE(i.e. one hot encoder )==since it does not require the value of feature should has the order , but I unable to do it since it requires huge spare RAM that my PC does not have. By googling, from[[4]](https://zhuanlan.zhihu.com/p/117230627), I can see OHE is the best suit for features only holds 5 categorical values  since OHE increase dimensions which brings the curse of dimensionality and so that the training is hard to implement. Therefore, choose ordinal encoder can not help but no alternatives. ==~~Target Encoder(Mean Encoder)~~==
+
+Up to now, all variables are encoded into the numerical, then I use the StandardScaler() to do the normalisation to all features except the class label. It is fundamental and essential since it let the scales of every feature to be unified. After the above steps are finished, I start to do the heatmap:
 
 <div align="center">
 <img align="left" width="50%" src="report_a3.assets/pearson.png" alt="pearson" /> 
@@ -106,12 +112,22 @@ You should consider the interpretability of your final chosen model in this part
 # Reference:
 
 1. https://towardsdatascience.com/is-my-spotify-music-boring-an-analysis-involving-music-data-and-machine-learning-47550ae931de
+
 2. https://rpubs.com/PeterDola/SpotifyTracks
+
 3. https://stackoverflow.com/questions/13413590/how-to-drop-rows-of-pandas-dataframe-whose-value-in-a-certain-column-is-nan
 
 	​	+ It contains everything about different ways of delete NA
 
-4. 
+4. https://zhuanlan.zhihu.com/p/117230627
+
+5. 
+
+
+
+
+
+
 
 Completion:
 
