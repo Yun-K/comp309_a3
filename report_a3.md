@@ -19,10 +19,6 @@ Due to there are lots of datasets in there, so the first thing that I do is to m
 
 After dealing with these missing values, I start to encode the categorical variables. For encoders, I use Label encoder and ordinal encoder where label encoder to encode the ‘music_genre’ and ‘mode’. Since ‘mode’ has only 2 categories(i.e. Major and Minor), so I think it is fine to use the label encoder. For ordinal encoder, it is used to encode  remaining categorical variables. 
 
-Actually, through the knowledge from [[4]](https://zhuanlan.zhihu.com/p/117230627), this ordinal encoder is better to suit the values has order. For instance, the categorial variable ‘obtained_date’ has the obvious order and from [[1]](https://rpubs.com/PeterDola/SpotifyTracks) and [[2]](https://towardsdatascience.com/is-my-spotify-music-boring-an-analysis-involving-music-data-and-machine-learning-47550ae931de), we can know ‘key’ also has the potential logic order, so these 2 are the best suit for ordinal encoder. 
-
-However, for remaining, I also use ordinal encoder as well, which is not the best choice that could cause under-fit. I also try to use ==OHE(i.e. one hot encoder )==since it does not require the value of feature should has the order , but I unable to do it since it requires huge spare RAM that my PC does not have. By googling, from[[4]](https://zhuanlan.zhihu.com/p/117230627), I can see OHE is the best suit for features only holds 5 categorical values  since OHE increase dimensions which brings the curse of dimensionality and so that the training is hard to implement. Therefore, choose ordinal encoder can not help but no alternatives. ==~~Target Encoder(Mean Encoder)~~==
-
 Up to now, all variables are encoded into the numerical, then I use the StandardScaler() to do the normalisation on all features except the class label. This step is fundamental and essential since it let the scales of every feature to be unified so that no machine learning models will be affected by ununified scales. 
 
 After above steps are finished, then I actually start to identify the important patterns by  finding the  high correlation between the music_generic class variable and others . There are 2 correlation methods are used by me, one is based on Pearson's correlation coefficient (r), which is a measure of linear correlation between two variables, it correspond to ==data.corr()== method. The value lies from -1 to +1. -1 indicating total negative linear correlation, 0 indicating no linear correlation and 1 indicating total positive linear correlation. Also, it is worth to note that it only support numerical variables, but up to now, everyone is numerical, so it’s fine. The other heatmap is based on ==phik==, it is another practical correlation coefficient. It can not only *work consistently between categorical, ordinal and interval variables, but also captures non-linear dependency,*it correspond to==data.phik_matrix()==method. For this phik, the value lies between 0 and 1, which means if the value is higher, then they are high correlated. Heatmap of them are shown below.
@@ -31,25 +27,18 @@ After above steps are finished, then I actually start to identify the important 
 <img align="left" width="50%" src="report_a3.assets/pearson.png" alt="pearson" /> 
 <img align="right" width="50%" src="report_a3.assets/phik.png" alt="phik" /> 
 </div><div align=center>
-<img align = "left"  width="30%" src="report_a3.assets/image-20210910185923263.png" alt="image-20210910185923263" />
+<img align = "left"  width=30%" src="report_a3.assets/image-20210910185923263.png" alt="image-20210910185923263" />
 <img  align="right" width="25%"  src="report_a3.assets/image-20210910185424920.png" alt="image-20210910185424920" style="zoom:50%;" />
 </div>
 
-First, let us look at the Pearson’s r, the heatmap is shown on the top left. For finding the important variables that are high correlated to music_genre, the corrlation value 0.5 is used by me to select features, it can make sure they are all high linear correlated, in which irrelevant features are dropped. For the readability,  matched columns and the corresponding correlated value are shown on the left screenshot in black. We can see only track_hash and popularity is greater than 5.
+First, let us look at the Pearson’s r, the heatmap is shown on the top left. For finding the important variables that are high correlated to music_genre, the corrlation value 0.5 is used by me to select features, it can make sure they are all high linear correlated, in which irrelevant features are dropped. For the readability, matched columns and the corresponding correlated value are shown on the left screenshot in black. We can see only track_hash and popularity is greater than 0.5.
 
-Then, I do the same thing on phik, screenshots of phik heatmap and matched features with corr value are shown on the right. We can see that there are more variables that are high correlated with music_generic in phik. 
+Then, I do the same thing on phik, screenshots of phik heatmap and matched features with corr value are shown on the top right. We can see there are more variables high correlated with Class Label in phik. By taking the union of these 2 methods, on the screenshot left below, we can see there are 8 obvious high correlated variables with Class Label.
+<img align=left width="15%" src="report_a3.assets/image-20210910190011426.png" alt="image-20210910190011426" style="zoom:67%;" />
 
-Among these 2 methods, we can clearly see phik has more matched features then pearson’s. Therefore, seems like more varibles are non-linear correlated to the Class label music_genre. Anyway, we can observe track_hash and popularity occur on both methods which is the highest and 2nd highest. Therefore, there is no doubt that ‘track_hash ’ and ‘popularity’ are the most important variables to the Class Label. For the rest, we can also see ‘acousticness’
+Among these 2 methods, we can clearly see phik has more matched features than pearson’s. Therefore, seems like more varibles are non-linear correlated to the Class label music_genre. Anyway, we can observe track_hash and popularity occur on both methods which is the highest and 2nd highest. Therefore, there is no doubt that ‘track_hash ’ and ‘popularity’ are the most important variables to the Class Label. For the rest, we can also see the  corr value of ‘loudness’, ‘energy’, ‘acousticness’  are greater then 0.67, which are also high correlated with Class label. 
 
-
-
-
-
-
-
-
-
-<img width="25%" src="report_a3.assets/image-20210910190011426.png" alt="image-20210910190011426" style="zoom:67%;" />
+From now on, obvious high correlated variables are identified successfully. For further exploration on feature interaction, we need to find the high correlated variables of these 8 features. To do this, above 2 correlation methods are used as well. For the best readability, 
 
 
 
@@ -70,6 +59,14 @@ Among these 2 methods, we can clearly see phik has more matched features then pe
 
 
 
+
+
+
+
+
+`Actually, through the knowledge from [[4]](https://zhuanlan.zhihu.com/p/117230627), this ordinal encoder is better to suit the values has order. For instance, the categorial variable ‘obtained_date’ has the obvious order and from [[1]](https://rpubs.com/PeterDola/SpotifyTracks) and [[2]](https://towardsdatascience.com/is-my-spotify-music-boring-an-analysis-involving-music-data-and-machine-learning-47550ae931de), we can know ‘key’ also has the potential logic order, so these 2 are the best suit for ordinal encoder. `
+
+`However, for remaining, I also use ordinal encoder as well, which is not the best choice that could cause under-fit. I also try to use ==OHE(i.e. one hot encoder )==since it does not require the value of feature should has the order , but I unable to do it since it requires huge spare RAM that my PC does not have. By googling, from[[4]](https://zhuanlan.zhihu.com/p/117230627), I can see OHE is the best suit for features only holds 5 categorical values  since OHE increase dimensions which brings the curse of dimensionality and so that the training is hard to implement. Therefore, choose ordinal encoder can not help but no alternatives. ==~~Target Encoder(Mean Encoder)~~==`
 
 
 
@@ -103,7 +100,9 @@ Within use track_hash:
 
 ##### (25 marks) Discuss the design of one or more of your intermediary systems. Justify the changes you made to the previous design based on its performance on the leaderboard, and from any other additional investigation you performed.
 
+3rd submissi:
 
+<img src="report_a3.assets/image-20210911014956008.png" alt="image-20210911014956008" style="zoom:50%;" />
 
 ##### (10 marks). Use your judgement to choose the best system you have developed — this may not necessarily be the most accurate system on the leaderboard. Make sure you select this submission as your final one on the competition page before the deadline. Explain why you chose this system, and note any particularly novel/interesting parts of it. You should submit screen captures and/or the source and executable code required to run your chosen submission so that the tutors can verify its authenticity. 	
 
