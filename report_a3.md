@@ -117,7 +117,7 @@ You should consider the interpretability of your final chosen model in this part
 
 3. https://stackoverflow.com/questions/13413590/how-to-drop-rows-of-pandas-dataframe-whose-value-in-a-certain-column-is-nan
 
-	​	+ It contains everything about different ways of delete NA
+	- It contains everything about different ways of delete NA
 
 4. https://zhuanlan.zhihu.com/p/117230627
 
@@ -125,12 +125,9 @@ You should consider the interpretability of your final chosen model in this part
 
 
 
-
-
-
-
-Completion:
+Cross Validation:
 
 5. https://scikit-learn.org/stable/modules/cross_validation.html
-6. 
+6. https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.RepeatedKFold.html#sklearn.model_selection.RepeatedKFold
+7. https://machinelearningmastery.com/how-to-configure-k-fold-cross-validation/
 
