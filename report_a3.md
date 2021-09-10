@@ -39,7 +39,8 @@ First, let us look at the Pearson’s r, the heatmap is shown on the top left. F
 
 Then, I do the same thing on phik, screenshots of phik heatmap and matched features with corr value are shown on the right. We can see that there are more variables that are high correlated with music_generic in phik. 
 
-Among these 2 methods, we can clearly see phik has more matched features then pearson’s. Therefore, seems like more varibles are non-linear correlated to the Class label music_genre. Among these 2 , We can see that track_hash always is the highest variable correlated to music_genre. These two 
+Among these 2 methods, we can clearly see phik has more matched features then pearson’s. Therefore, seems like more varibles are non-linear correlated to the Class label music_genre. Anyway, we can observe track_hash and popularity occur on both methods which is the highest and 2nd highest. Therefore, there is no doubt that ‘track_hash ’ and ‘popularity’ are the most important variables to the Class Label. For the rest, we can also see ‘acousticness’
+
 
 
 
