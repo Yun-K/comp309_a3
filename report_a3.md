@@ -23,18 +23,37 @@ Actually, through the knowledge from [[4]](https://zhuanlan.zhihu.com/p/11723062
 
 However, for remaining, I also use ordinal encoder as well, which is not the best choice that could cause under-fit. I also try to use ==OHE(i.e. one hot encoder )==since it does not require the value of feature should has the order , but I unable to do it since it requires huge spare RAM that my PC does not have. By googling, from[[4]](https://zhuanlan.zhihu.com/p/117230627), I can see OHE is the best suit for features only holds 5 categorical values  since OHE increase dimensions which brings the curse of dimensionality and so that the training is hard to implement. Therefore, choose ordinal encoder can not help but no alternatives. ==~~Target Encoder(Mean Encoder)~~==
 
-Up to now, all variables are encoded into the numerical, then I use the StandardScaler() to do the normalisation to all features except the class label. It is fundamental and essential since it let the scales of every feature to be unified. After the above steps are finished, I start to do the heatmap:
+Up to now, all variables are encoded into the numerical, then I use the StandardScaler() to do the normalisation on all features except the class label. This step is fundamental and essential since it let the scales of every feature to be unified so that no machine learning models will be affected by ununified scales. 
+
+After above steps are finished, then I actually start to identify the important patterns by  finding the  high correlation between the music_generic class variable and others . There are 2 correlation methods are used by me, one is based on Pearson's correlation coefficient (r), which is a measure of linear correlation between two variables, it correspond to ==data.corr()== method. The value lies from -1 to +1. -1 indicating total negative linear correlation, 0 indicating no linear correlation and 1 indicating total positive linear correlation. Also, it is worth to note that it only support numerical variables, but up to now, everyone is numerical, so it’s fine. The other heatmap is based on ==phik==, it is another practical correlation coefficient. It can not only *work consistently between categorical, ordinal and interval variables, but also captures non-linear dependency,*it correspond to==data.phik_matrix()==method. For this phik, the value lies between 0 and 1, which means if the value is higher, then they are high correlated. Heatmap of them are shown below.
 
 <div align="center">
 <img align="left" width="50%" src="report_a3.assets/pearson.png" alt="pearson" /> 
 <img align="right" width="50%" src="report_a3.assets/phik.png" alt="phik" /> 
+</div><div align=center>
+<img align = "left"  width="30%" src="report_a3.assets/image-20210910185923263.png" alt="image-20210910185923263" />
+<img  align="right" width="25%"  src="report_a3.assets/image-20210910185424920.png" alt="image-20210910185424920" style="zoom:50%;" />
 </div>
 
-<img src="report_a3.assets/image-20210910022709403.png" alt="image-20210910022709403" style="zoom:67%;" /><img src="report_a3.assets/image-20210910022722203.png" alt="image-20210910022722203" style="zoom:50%;" />
+First, let us look at the Pearson’s r, the heatmap is shown on the top left. For finding the important variables that are high correlated to music_genre, the corrlation value 0.5 is used by me to select features, it can make sure they are all high linear correlated, in which irrelevant features are dropped. For the readability,  matched columns and the corresponding correlated value are shown on the left screenshot in black. We can see only track_hash and popularity is greater than 5.
+
+Then, I do the same thing on phik, screenshots of phik heatmap and matched features with corr value are shown on the right. We can see that there are more variables that are high correlated with music_generic in phik. 
+
+Among these 2 methods, we can clearly see phik has more matched features then pearson’s. Therefore, seems like more varibles are non-linear correlated to the Class label music_genre. Among these 2 , We can see that track_hash always is the highest variable correlated to music_genre. These two 
 
 
 
-<img src="report_a3.assets/image-20210910022750025.png" alt="image-20210910022750025" style="zoom:50%;" />
+
+
+
+
+
+<img width="25%" src="report_a3.assets/image-20210910190011426.png" alt="image-20210910190011426" style="zoom:67%;" />
+
+
+
+
+
 
 
 
