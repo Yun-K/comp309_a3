@@ -62,8 +62,6 @@ Then, let’s look at the right scatter plot. Unlike the plot that we see from l
 
 # Completion: Developing and testing your machine learning system
 
-`4 pages Completion!`
-
 ##### (15 marks) Discuss the initial design of your system, i.e. before you have submitted any predictions to the Kaggle competition. Justify each decision you made in its design, e.g. reference insight you gained in the Core part.<img align="right" width="20%" src="report_a3.assets/image-20210908224436081.png" alt="image-20210908224436081" style="zoom:33%;" />
 
 Actually most details of my initial design is described at Core part, but anyway, I will repeat the important part. First, from the initial observation, I find that there are potential missing values which is one categorical (2.5% missing)and 2 numerical(5% missing) which is shown on the top right screenshot. In my initial design, for dealing with them, I choose to drop all categorical missing values and use global mean value to replace numerical missing value. Then, for the encoder choice , I choose to use label encoder to encode ‘mode’ and ‘music_genre ’, and ordinal encoder to encode the rest.  Actually, through the knowledge from [[4]](https://zhuanlan.zhihu.com/p/117230627), ordinal encoder is better to suit the values has order. For instance, the categorial variable ‘obtained_date’ has the obvious order and from [[1]](https://rpubs.com/PeterDola/SpotifyTracks) and [[2]](https://towardsdatascience.com/is-my-spotify-music-boring-an-analysis-involving-music-data-and-machine-learning-47550ae931de), we can know ‘key’ also has the potential logic order, so these 2 are the best suit for ordinal encoder. <img align=right width="15%" src="report_a3.assets/image-20210910190011426.png" alt="image-20210910190011426" style="zoom:67%;" />
@@ -79,6 +77,8 @@ For validating the real reliable performance, I delete the track_hash, and the l
 
 ##### (25 marks) Discuss the design of one or more of your intermediary systems. Justify the changes you made to the previous design based on its performance on the leaderboard, and from any other additional investigation you performed.
 
+`Since I do some minor changes, the output of my submitted ipynb is not the Kaggle Version 4, but the source code are about the same. If you really need to do the authentication, I can share the github link to prove it. `
+
 ```python
 cv = KFold(n_splits=5, shuffle=True, random_state=250)
 model_dict = get_models()
@@ -87,47 +87,39 @@ for model in model_dict.keys():
     model_dict[model] = scores
 ```
 
-<img align=right width=35% src="report_a3.assets/image-20210911141532192.png" alt="image-20210911141532192" style="zoom:50%;" />~~Since my initial design only use the random forest and train/test set, so f~~
+<img align=right width=35% src="report_a3.assets/image-20210911141532192.png" alt="image-20210911141532192" style="zoom:50%;" />From [0] and [8], I obtain that in order to improve the accuracy, the **Cross-Validation(aka. CV)** and more machine learning models should be used. This is because for the general case where only has train test set, the accuracy is largely depend on the split of whole dataset. For instances, for this split, this model may perform much more higher then others, but if the split is changed, then it may not be the best, so the consistency can not be kept and it is hard to decide which ML model and which model combination parameters is the best suit for current dataset. The reason for this is that model did not train and fit on all instances, which is similar as the case that current year exam(Kaggle) are from questions dataset, but you only train on the part of questions(train set) from questions dataset, so you will not know how to do questions you did not train on current year exam(Kaggle), so it cause the performance bias and non-consistency. 
 
-From [0] and [8], I obtain that in order to improve the accuracy, the **Cross-Validation(aka. CV)** and more machine learning models should be used. This is because for the general case where only has train test set, the accuracy is largely depend on the split of whole dataset. For instances, for this split, this model may perform much more higher then others, but if the split is changed, then it may not be the best, so the consistency can not be kept and it is hard to decide which ML model and which model combination parameters is the best suit for current dataset. Therefore, build on my initial design, more machine learning models and the CV set are introduced. The right screenshot indicates different machine learning models that I use, and the above code snippest indicates that I use K-fold with 5 as my Cross-Validation. 
+Therefore, build on my initial design, more machine learning models and CV set are introduced in my 2nd and 3rd Kaggle submission. The above code snippets indicates that I use K-fold with 5 as my Cross-Validation, and the right screenshot indicates different machine learning models that I put, and the below==right screenshot on next question==is from 4th submission system which shows the best suit ML model Rank associated with its accuracy score. We can see the mean acc of Rank 0 is 0.5718 and the model is ==MLPClassifer(alpha=1e-05,max_iter=500,random_state=250)==.  Since the CV (K-Fold) is introduced, so the consistency is guarantee which make this RANK reliable. For validating this, my 4th submission use Rank 0, and 5th submission choose Rank 5. The Kaggle of my 4th acc is higher then 5th acc, which meet the expectation.
 
+##### (10 marks). Use your judgement to choose the best system you have developed — this may not necessarily be the most accurate system on the leaderboard. Make sure you select this submission as your final one on the competition page before the deadline. Explain why you chose this system, and note any particularly novel/interesting parts of it. You should submit screen captures and/or the source and executable code required to run your chosen submission so that the tutors can verify its authenticity. 	<img align=right width=40% src="report_a3.assets/image-20210911053206805.png" alt="image-20210911053206805" style="zoom:50%;" />
 
+I think my best system that I have developed is my 4th submission, which is the one with the most accurate system. The screenshot on the right indicates the performance on the given dataset, which is the mean score of the best model is 0.5718, and on Kaggle, I receive 0.56661. Although it is a bit lower on actual Kaggle prediction,but it is in the range which means it is not over-fit.
 
- For my 4th submission system:
+Reasons for chosen this system to be the best are:
 
- Therefore, it cause the data leakage, but it also indicates variables that are high correlated with it should be treat it as the most important variables tier like track_hash itself, in our case, they are popularity and energy. 
+a). It use Cross-Validation set and multiple machine learning  models in order to get the best.
 
-For popularity, there is nothing to be concentrate it, but for energy, there are a lot. From the energy’s perspective, there is a surprising thing in which ‘valence’ is the candidate, although it’s not high correlated with Class Label or track_hash. On my 4th Kaggle submission, this feature is added, and the accuracy upgrade from 0.547 to 0.5611, which is a great upgrade.
+b). I do the feature selection again to add ==‘valence’== to the final selected feature list, thus the performance upgraded to become the highest. 
 
+- During the EDA process in core part where to find and identify the important patterns, at the feature interaction part, I observe that ‘track_hash’ is a kind of unique id that associated with each music instance, so it cause the data leakage which brings the high accuracy score. Although ‘track_hash’ need to be deleted, it also remind me that we should treat ‘track_hash ’ as the important most important variable which is the same as music_genre class. Hence, from ‘track_hash’ perspective, we obtain that popularity and energy are high correlated with it. And for popularity, there is nothing to be concentrate it, but for energy, there are a lot. From the energy’s perspective, there is a surprising thing in which ==‘valence’== is the candidate that high correlated with energy although it’s not high correlated with either class label or track_hash. On my 4th Kaggle submission, this feature is added, and the accuracy upgrade from 0.547 to 0.5611, which is a great upgrade and be the best among all my submission. The potential final selected features are listed below on the screenshot.
 
-
-
-
-3rd submission:
-
-<img src="report_a3.assets/image-20210911014956008.png" alt="image-20210911014956008" style="zoom:50%;" />
-
-4th:
-
-<img src="report_a3.assets/image-20210911053206805.png" alt="image-20210911053206805" style="zoom:50%;" />
-
-##### (10 marks). Use your judgement to choose the best system you have developed — this may not necessarily be the most accurate system on the leaderboard. Make sure you select this submission as your final one on the competition page before the deadline. Explain why you chose this system, and note any particularly novel/interesting parts of it. You should submit screen captures and/or the source and executable code required to run your chosen submission so that the tutors can verify its authenticity. 	
-
-
-
-
+<img align=left width=45% src="report_a3.assets/image-20210911031924011.png" alt="image-20210911031924011" /><img src="report_a3.assets/image-20210911162924640.png" alt="image-20210911162924640" style="zoom:70%;" />
 
 # Challenge: Reflecting on your findings
 
-Until now, we have been focusing on achieving the best performance possible — but there should be some other aspects that ML tool users should consider, e.g. the interpretability of the model.
+##### (10 marks) How easy is it to interpret your chosen machine learning model, i.e. how easy to comprehend why certain predictions have been made? 
 
-You should consider the interpretability of your final chosen model in this part. Your report (`1 page` on the Challenge component) should address the following questions:
+##### If your model is difficult to interpret, do you see any problems with this? (e.g. whether users will trust your model? whether it is difficult for the deployment of your solution or to use the model? and so forth.) How would it compare to a simpler model, e.g. a simple K-Nearest neighbour? 
 
-- ##### (10 marks) How easy is it to interpret your chosen machine learning model, i.e. how easy to comprehend why certain predictions have been made?
+##### If your model is easy to interpret, what are its limitations? (e.g. whether it can catch the underlying relationship in the data? whether it can provide accurate predictions?) How would it compare to a more complex model, such as a ensemble method (e.g. random forest) 	<img align=right width=40% src="report_a3.assets/image-20210911053206805.png" alt="image-20210911053206805" style="zoom:50%;" />
 
--  ##### If your model is difficult to interpret, do you see any problems with this? (e.g. whether users will trust your model? whether it is difficult for the deployment of your solution or to use the model? and so forth.) How would it compare to a simpler model, e.g. a simple K-Nearest neighbour?
+My chosen model is ==MLPClassifer==. As we can see from Completion part, through the K-fold validation, among all the ML models that I add, the rank of MLP always occur at the best 5, just the controller parameter is different. For the MLP classifier(i.e. neural network), max_iter indicates the iteration time in order to avoid over-fit, and the random_state generate the random seed which make sure the consistent consequence. The **most important controller is 'alpha'**, from lecture slides, we can know this controller introduce a penalty, to encourage the weight values to stay “small” (means a smoother boundary).  This generalises the hyperplane decision boundary in the space of input vectors into the more complicated boundary. From my rank, we can see ‘alpha ’ as the penalty coefficient, the lower perform the better result. I think it is because the MLP is the neural network and the idea of it is from the human brain, so only a suitable penalty can let the human perform better next time, not a too big or too small penalty, this theory also makes sense on the MLP classifier.
 
-- ##### If your model is easy to interpret, what are its limitations? (e.g. whether it can catch the underlying relationship in the data? whether it can provide accurate predictions?) How would it compare to a more complex model, such as a ensemble method (e.g. random forest)
+
+
+
+
+
 
 
 
