@@ -1,7 +1,5 @@
 # CORE: Exploring and understanding the Data 
 
-`no more than 2.5 pages!!!!!!!!`
-
 ##### (20 marks) Highlight the findings of your dataset exploration. You should identify four important patterns (e.g. large correlation between variables), and discuss the potential consequence this may have on your results. To achieve a high mark, you should consider more complicated patterns, such as feature interactions. Use your judgement and justify what is an important pattern.
 
 Due to there are lots of datasets in there, so the first thing that I do is to merge them into a whole dataset called merged_dataset except for the testing-instances dataset. Then, I use pandas-profile to generate the report based on this whole merged_dataset. By observing the report and googling the definition for each field( [[1]](https://rpubs.com/PeterDola/SpotifyTracks) and [[2]](https://towardsdatascience.com/is-my-spotify-music-boring-an-analysis-involving-music-data-and-machine-learning-47550ae931de)), for feature columns, I find that although there are no missing values by using python, but there are some potential missing values for several features. The initial findings for each feature are described at below: 
@@ -9,7 +7,7 @@ Due to there are lots of datasets in there, so the first thing that I do is to m
 + 'instance_id' is unique, which means the percentage of distinct is 100%
 	+ For avoiding the over-fit issue during training, I decide to delete this column at start, since it is absolutely unnecessary feature. 
 + For features that has potential missing value:<img align="right" width="20%" src="report_a3.assets/image-20210908224436081.png" alt="image-20210908224436081" style="zoom:33%;" /> (on the right screenshot)
-	+ =='artist_name'== is the category variable which has empty_field as the individual category to capture the missing values.  ~~so leave  it alone since it capture missing value~~ 	
+	+ =='artist_name'== is the category variable which has empty_field as the individual category to capture the missing values.
 	  + Through the observation, it is uniform distributed across all datasets(~ 5% missing for each), which cause the total missing percentage is less than 5% as well. Therefore, I think it is MCAR, which means rows can be deleted where artist_name is missing, which is the operation that I do on this feature.
 	+ Undoubtedly, =='duration_ms'== is a numerical feature that values should always be positive. However, there are about 10% rows that has -1 as its value, which indicates they are missing. 
 		+ The distribution of missing also is the same as previous, which means it is MCAR as well. However, from slide14, I obtain that Deletion approach should only be applied when it is MCAR and missing percentage is less than 5%. 
@@ -36,73 +34,82 @@ First, let us look at the Pearson’s r, the heatmap is shown on the top left. F
 Then, I do the same thing on phik, screenshots of phik heatmap and matched features with corr value are shown on the top right. We can see there are more variables high correlated with Class Label in phik. By taking the union of these 2 methods, on the screenshot left below, we can see there are 8 obvious high correlated variables with Class Label.
 <img align=left width="15%" src="report_a3.assets/image-20210910190011426.png" alt="image-20210910190011426" style="zoom:67%;" />
 
-Among these 2 methods, we can clearly see phik has more matched features than pearson’s. Therefore, seems like more varibles are non-linear correlated to the Class label music_genre. Anyway, we can observe track_hash and popularity occur on both methods which is the highest and 2nd highest. Therefore, there is no doubt that ‘track_hash ’ and ‘popularity’ are the most important variables to the Class Label. For the rest, we can also see the  corr value of ‘loudness’, ‘energy’, ‘acousticness’  are greater then 0.67, which are also high correlated with Class label. 
+**Among these 2 methods, we can clearly see phik has more matched features than pearson’s. Therefore, seems like more varibles are non-linear correlated to the Class label music_genre. Anyway, we can observe track_hash and popularity occur on both methods which is the highest and 2nd highest. Therefore, there is no doubt that ‘track_hash ’ and ‘popularity’ are the most important variables to the Class Label. For the rest, we can also see the  corr value of ‘loudness’, ‘energy’, ‘acousticness’  are greater then 0.67, which are also are very important pattern with the Class label. This means in the future training process, the consequence that we may observe is these variables got higher weights then other variables since they are high correlated with Class Label thus they are important .*
 
-From now on, obvious high correlated variables are identified successfully. For further exploration on feature interaction, we need to find the high correlated variables of these 8 features. To do this, above 2 correlation methods are used as well. For the best readability, 
+From now on, obvious high correlated variables are identified successfully. For further exploration on feature interaction, we need to find the high correlated variables of these 8 features. To do this, I use phik correlation method to find the potential high corelated variables which greater then 0.5 for each of these 8 matched features. The code and output for this operation is shown below.
 
+```python
+dict = {}
+for fea in matched_features:
+    temp_dict,_ = find_feature_name_between_2_vars(cor_method_name="phik",var1=fea,corr_val=0.5)
+    dict.update(temp_dict)
+dict
+```
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-`Actually, through the knowledge from [[4]](https://zhuanlan.zhihu.com/p/117230627), this ordinal encoder is better to suit the values has order. For instance, the categorial variable ‘obtained_date’ has the obvious order and from [[1]](https://rpubs.com/PeterDola/SpotifyTracks) and [[2]](https://towardsdatascience.com/is-my-spotify-music-boring-an-analysis-involving-music-data-and-machine-learning-47550ae931de), we can know ‘key’ also has the potential logic order, so these 2 are the best suit for ordinal encoder. `
-
-`However, for remaining, I also use ordinal encoder as well, which is not the best choice that could cause under-fit. I also try to use ==OHE(i.e. one hot encoder )==since it does not require the value of feature should has the order , but I unable to do it since it requires huge spare RAM that my PC does not have. By googling, from[[4]](https://zhuanlan.zhihu.com/p/117230627), I can see OHE is the best suit for features only holds 5 categorical values  since OHE increase dimensions which brings the curse of dimensionality and so that the training is hard to implement. Therefore, choose ordinal encoder can not help but no alternatives. ==~~Target Encoder(Mean Encoder)~~==`
-
-
-
-
-
-
-
-
+<img align=left width=45% src="report_a3.assets/image-20210911031924011.png" alt="image-20210911031924011" />**From the left screenshot, we can see clearly how these 8 features interact with each other.  For instances of the most important variable, which is ‘track_hash’. We can see ‘track_hash’ is high correlated with ‘popularity’ and ‘energy’. This means ‘track_hash’ depend on these two variables, if the value of ‘track_hash’ changes, then ‘popularity’ and ‘energy’ will be greatly affected by it(i.e. if the value of track_hash changes, then values of these 2 variables most likely changed), vice verse. For another instance, we can see ‘speechiness’ does not contain anything, this means it is a pretty independent variables compare to others, which means if it changes, other variables will not be affected, vice verse.*
 
 ##### (20 marks) Visualisation is an important aspect of this task. Please illustrate at least one important finding of your work using visualisation. For full marks, you should be expected to use more than a simple scatter plot.
 
+The visualisation that I choose are all based on the potential patterns that are shown on the last part of previous question, which is the part you just read it . 
+<div align=center>
+<img width=50% src="report_a3.assets/plot1.png"  /><img width=50% src="report_a3.assets/plot2.png"  />
+</div>
+Both of them are all scatter plot, the class label ‘music_genre’ is used as the hue parameter in which produce points with different colours based on its class, so we can clearly see the visualisation of correlation between X-axis and Y-axis variable where the X-axis is energy for both plots and Y-axis is popularity for the left scatter plot and loudness for the right plot.
 
+Continue from what we discover from last question, which is energy and popularity are high correlated with track_hash, but ‘energy ’ and ‘popularity ’ are independent to each other, so that one change will not affect the other one. Therefore, we can clearly observe this from the left scatter plot where the boundary between different class of music_genre is straight forward and clear.
 
-
+Then, let’s look at the right scatter plot. Unlike the plot that we see from left one, the energy and loudness are high correlated with each other, which means one variable changes will greatly affect the other one. Therefore, as we can see the right scatter plot, most of them are overlapping with each other across all different value that these 2 variables contains, which prove the theory that one changes greatly affect the other one.
 
 # Completion: Developing and testing your machine learning system
 
-You should refine your machine learning system a number of times (at least 3, including the initial system) based on the performance you achieve on the public leaderboard. `Your submitted report should contain up to 4 pages regarding the Completion component`
+`4 pages Completion!`
 
-##### (15 marks) Discuss the initial design of your system, i.e. before you have submitted any predictions to the Kaggle competition. Justify each decision you made in its design, e.g. reference insight you gained in the Core part.
+##### (15 marks) Discuss the initial design of your system, i.e. before you have submitted any predictions to the Kaggle competition. Justify each decision you made in its design, e.g. reference insight you gained in the Core part.<img align="right" width="20%" src="report_a3.assets/image-20210908224436081.png" alt="image-20210908224436081" style="zoom:33%;" />
 
-My initial design 
+Actually most details of my initial design is described at Core part, but anyway, I will repeat the important part. First, from the initial observation, I find that there are potential missing values which is one categorical (2.5% missing)and 2 numerical(5% missing) which is shown on the top right screenshot. In my initial design, for dealing with them, I choose to drop all categorical missing values and use global mean value to replace numerical missing value. Then, for the encoder choice , I choose to use label encoder to encode ‘mode’ and ‘music_genre ’, and ordinal encoder to encode the rest.  Actually, through the knowledge from [[4]](https://zhuanlan.zhihu.com/p/117230627), ordinal encoder is better to suit the values has order. For instance, the categorial variable ‘obtained_date’ has the obvious order and from [[1]](https://rpubs.com/PeterDola/SpotifyTracks) and [[2]](https://towardsdatascience.com/is-my-spotify-music-boring-an-analysis-involving-music-data-and-machine-learning-47550ae931de), we can know ‘key’ also has the potential logic order, so these 2 are the best suit for ordinal encoder. <img align=right width="15%" src="report_a3.assets/image-20210910190011426.png" alt="image-20210910190011426" style="zoom:67%;" />
 
+However, for remaining, ordinal encoder may not be the best choice that could cause potential issue like under-fit. In my initial design, I also try to use ==OHE(i.e. one hot encoder )==since it does not require the feature must have the logical order, but finally I still choose to use the ordinal encoder. This is because from[[4]](https://zhuanlan.zhihu.com/p/117230627), I can see OHE is the best suit for features *only* holds 5 categorical values since OHE increase dimensions which brings the curse of dimensionality and so that the training is hard to implement. Therefore, although ordinal encoder can not help, but there are no alternatives.
 
+For the feature selection, in my initial design, only these 8 features shown on the right screenshot are selected for fitting the ML model since they are all high correlated with the genre class label. Others are dropped since I believe they are unnecessary features that can only bring the confusion to the machine learning model which may cause the bias and overfit.<img align=left width=40% src="report_a3.assets/image-20210910023941129.png" alt="Within use track_hash" style="zoom:50%;" />
+Then, after train_test split, I choose to use random forest classifier as my first model to fit since it is an ensemble technique that within count several weak model together in order to get the best performance. However, as we can see my accuracy scores shown on the left, the accuracy always greater then 0.93, which is strange. To address this issue, I look up the internet and I find that ‘track_hash’ is a kind of the real world identification card number that is unique which associated with each music instance just like unique id associate with each individual person, so, it cause the data leakage which brings the high accuracy score .<img align=left width=60% src="report_a3.assets/image-20210911134859900.png" alt="image-20210911134859900" style="zoom:80%;" />
 
-Within use track_hash:
-
-<img src="report_a3.assets/image-20210910023941129.png" alt="Within use track_hash" style="zoom:50%;" />
+For validating the real reliable performance, I delete the track_hash, and the left screenshot indicates my first initial design accuracy is 0.543. Then I use my initial design to submit to Kaggle and I get 0.53544 for the 1st Kaggle submission.
 
 
 
 ##### (25 marks) Discuss the design of one or more of your intermediary systems. Justify the changes you made to the previous design based on its performance on the leaderboard, and from any other additional investigation you performed.
 
-3rd submissi:
+```python
+cv = KFold(n_splits=5, shuffle=True, random_state=250)
+model_dict = get_models()
+for model in model_dict.keys():
+    scores = cross_val_score(model, X, y, scoring='accuracy', cv=cv, n_jobs=-1)
+    model_dict[model] = scores
+```
+
+<img align=right width=35% src="report_a3.assets/image-20210911141532192.png" alt="image-20210911141532192" style="zoom:50%;" />~~Since my initial design only use the random forest and train/test set, so f~~
+
+From [0] and [8], I obtain that in order to improve the accuracy, the **Cross-Validation(aka. CV)** and more machine learning models should be used. This is because for the general case where only has train test set, the accuracy is largely depend on the split of whole dataset. For instances, for this split, this model may perform much more higher then others, but if the split is changed, then it may not be the best, so the consistency can not be kept and it is hard to decide which ML model and which model combination parameters is the best suit for current dataset. Therefore, build on my initial design, more machine learning models and the CV set are introduced. The right screenshot indicates different machine learning models that I use, and the above code snippest indicates that I use K-fold with 5 as my Cross-Validation. 
+
+
+
+ For my 4th submission system:
+
+ Therefore, it cause the data leakage, but it also indicates variables that are high correlated with it should be treat it as the most important variables tier like track_hash itself, in our case, they are popularity and energy. 
+
+For popularity, there is nothing to be concentrate it, but for energy, there are a lot. From the energy’s perspective, there is a surprising thing in which ‘valence’ is the candidate, although it’s not high correlated with Class Label or track_hash. On my 4th Kaggle submission, this feature is added, and the accuracy upgrade from 0.547 to 0.5611, which is a great upgrade.
+
+
+
+
+
+3rd submission:
 
 <img src="report_a3.assets/image-20210911014956008.png" alt="image-20210911014956008" style="zoom:50%;" />
+
+4th:
+
+<img src="report_a3.assets/image-20210911053206805.png" alt="image-20210911053206805" style="zoom:50%;" />
 
 ##### (10 marks). Use your judgement to choose the best system you have developed — this may not necessarily be the most accurate system on the leaderboard. Make sure you select this submission as your final one on the competition page before the deadline. Explain why you chose this system, and note any particularly novel/interesting parts of it. You should submit screen captures and/or the source and executable code required to run your chosen submission so that the tutors can verify its authenticity. 	
 
@@ -130,6 +137,8 @@ You should consider the interpretability of your final chosen model in this part
 
 # Reference:
 
+0. School slides and tutorials
+
 1. https://towardsdatascience.com/is-my-spotify-music-boring-an-analysis-involving-music-data-and-machine-learning-47550ae931de
 
 2. https://rpubs.com/PeterDola/SpotifyTracks
@@ -140,13 +149,11 @@ You should consider the interpretability of your final chosen model in this part
 
 4. https://zhuanlan.zhihu.com/p/117230627
 
-5. 
-
-
 
 Cross Validation:
 
 5. https://scikit-learn.org/stable/modules/cross_validation.html
 6. https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.RepeatedKFold.html#sklearn.model_selection.RepeatedKFold
 7. https://machinelearningmastery.com/how-to-configure-k-fold-cross-validation/
+8. https://www.codespeedy.com/improve-accuracy-of-machine-learning-model-in-python/
 
